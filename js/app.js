@@ -8,9 +8,11 @@ $(document).ready(function () {
     setProgressBar(current);
 
     $(".next").click(function () {
-
         current_fs = $(this).parent().parent();
         next_fs = $(this).parent().parent().next();
+
+        //Validation
+        if (!validateFieldSet(current_fs)) return;
 
         //Add Class Active
         $("#progressbar li").eq($("fieldset").index(next_fs)).addClass("active");
@@ -80,5 +82,50 @@ $(document).ready(function () {
     $(".submit").click(function () {
         return false;
     })
+
+    /** 
+     * Check if the current fieldset has been filled correctly
+     * 
+     * @return Boolean (true if filled correctly else false)
+     */
+    function validateFieldSet(currentFieldset) {
+
+        var inputs = currentFieldset.find('input')
+        var textareas = currentFieldset.find('textarea')
+        var selects = currentFieldset.find('select')
+
+        var fieldsetValid = true;
+
+        inputs.each(function () {
+            let fieldValue = $(this).val();
+            if (fieldValue === '' || fieldValue === undefined || fieldValue === null) {
+                $(this).addClass('is-invalid')
+
+                fieldsetValid = false;
+            }
+        })
+
+        textareas.each(function () {
+            let fieldValue = $(this).val();
+            if (fieldValue === '' || fieldValue === undefined || fieldValue === null) {
+                $(this).addClass('is-invalid')
+                fieldsetValid = false;
+            }
+        })
+
+        selects.each(function () {
+            let fieldValue = $(this).val();
+            if (fieldValue === '' || fieldValue === undefined || fieldValue === null) {
+                $(this).addClass('is-invalid')
+                fieldsetValid = false;
+            }
+        })
+
+        return fieldsetValid;
+    }
+
+    $("input").focus(function () {
+        $(this).removeClass('is-invalid');
+    });
 
 });
